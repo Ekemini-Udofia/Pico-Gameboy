@@ -1,35 +1,32 @@
 #include "system_display.hpp"
-#include <Wire.h> // still using Arduino Wire, since you’re bit-banging I2C manually you can remove this later
 
 namespace sys_display {
 
-  // Minimal screen buffer
-  static uint8_t buffer[cfg::OLED_WIDTH * cfg::OLED_HEIGHT / 8];
+  // Using Adafruit SSD1306 (I2C)
+  static Adafruit_SSD1306 display(cfg::OLED_WIDTH, cfg::OLED_HEIGHT, &Wire);
 
   void init() {
-      // Initialize I2C pins if doing bit-banging
-      pinMode(cfg::PIN_SDA, OUTPUT);
-      pinMode(cfg::PIN_SCL, OUTPUT);
-      
-      // Reset buffer
+      Wire.begin(cfg::PIN_SDA, cfg::PIN_SCL); // optional, only if not default
+      if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+          Serial.println("SSD1306 allocation failed");
+          for(;;);
+      }
       clear();
-
-      // Send minimal init sequence to SSD1306
-      // This is just placeholder — you will replace with your bit-banged commands
+      display.display();
   }
 
   void clear() {
-      memset(buffer, 0, sizeof(buffer));
+      display.clearDisplay();
   }
 
-  void drawPixel(uint8_t x, uint8_t y) {
-      if(x >= cfg::OLED_WIDTH || y >= cfg::OLED_HEIGHT) return;
-      buffer[x + (y/8)*cfg::OLED_WIDTH] |= (1 << (y % 8));
+  void drawTest() {
+      display.setTextSize(1);
+      display.setTextColor(SSD1306_WHITE);
+      display.setCursor(0,0);
+      display.println("Phase 1 OLED Test");
   }
 
   void update() {
-      // Send buffer to OLED using your I2C bit-bang functions
-      // For now, just leave empty
+      display.display();
   }
-
 }
