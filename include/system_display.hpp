@@ -4,9 +4,9 @@
 
 namespace sys_display {
 
-void init();
-void clear();
-void drawPixel(uint8_t x, uint8_t y);
-void update();
+  void init();
+  void clear();
+  void drawPixel(uint8_t x, uint8_t y);
+  void update();
 
 }

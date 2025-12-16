@@ -4,7 +4,7 @@
 
 namespace sys_input {
 
-void init();
-bool readButton(uint8_t pin);
+  void init();
+  bool readButton(uint8_t pin);
 
 }
